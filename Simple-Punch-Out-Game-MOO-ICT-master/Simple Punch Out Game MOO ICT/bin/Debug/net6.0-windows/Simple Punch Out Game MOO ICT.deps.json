@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "Simple Punch Out Game MOO ICT/1.0.0": {
+        "runtime": {
+          "Simple Punch Out Game MOO ICT.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Simple Punch Out Game MOO ICT/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
