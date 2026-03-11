@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Classic Snakes Game Tutorial - MOO ICT/1.0.0": {
+        "runtime": {
+          "Classic Snakes Game Tutorial - MOO ICT.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Classic Snakes Game Tutorial - MOO ICT/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
