@@ -1,0 +1,33 @@
+@startuml
+left to right direction
+
+actor "Jogador" as Player
+
+rectangle "Jogo 23 (Snake)" {
+  (Iniciar jogo) as UC_Start
+  (Selecionar velocidade) as UC_Speed
+  (Ativar modo parede) as UC_Wall
+  (Ativar velocidade progressiva) as UC_Prog
+  (Controlar cobra) as UC_Move
+  (Comer comida) as UC_Eat
+  (Pausar/Retomar) as UC_Pause
+  (Reiniciar partida) as UC_Restart
+  (Tirar snapshot) as UC_Snap
+  (Ver pontuacao e tempo) as UC_ScoreTime
+  (Game Over) as UC_GameOver
+}
+
+Player --> UC_Start
+Player --> UC_Speed
+Player --> UC_Wall
+Player --> UC_Prog
+Player --> UC_Move
+Player --> UC_Eat
+Player --> UC_Pause
+Player --> UC_Restart
+Player --> UC_Snap
+Player --> UC_ScoreTime
+Player --> UC_GameOver
+
+UC_GameOver .> UC_Restart : estende
+@enduml

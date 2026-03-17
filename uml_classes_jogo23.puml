@@ -1,0 +1,43 @@
+@startuml
+
+class Program {
+  +Main()
+}
+
+class Form1 {
+  -Snake : List<Circle>
+  -food : Circle
+  -score : int
+  -highScore : int
+  -isPaused : bool
+  -wallMode : bool
+  -progressiveSpeed : bool
+  +Form1()
+  -KeyIsDown()
+  -KeyIsUp()
+  -StartGame()
+  -TakeSnapShot()
+  -GameTimerEvent()
+  -RestartGame()
+  -EatFood()
+  -GameOver()
+  -TogglePause()
+  -ApplyLayout()
+}
+
+class Circle {
+  +X : int
+  +Y : int
+}
+
+class Settings {
+  +Width : int
+  +Height : int
+  +directions : string
+}
+
+Program --> Form1 : abre
+Form1 "1" *-- "many" Circle : Snake
+Form1 --> Settings : usa
+
+@enduml

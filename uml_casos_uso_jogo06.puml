@@ -1,0 +1,30 @@
+@startuml
+left to right direction
+
+actor "Jogador" as Player
+
+rectangle "Jogo 06 (Punch-Out)" {
+  (Iniciar jogo) as UC_Start
+  (Ver instrucoes) as UC_Instr
+  (Sair) as UC_Exit
+  (Atacar) as UC_Attack
+  (Bloquear) as UC_Block
+  (Pausar/Retomar) as UC_Pause
+  (Reiniciar partida) as UC_Restart
+  (Ver resultado) as UC_Result
+  (Voltar ao menu) as UC_Menu
+}
+
+Player --> UC_Start
+Player --> UC_Instr
+Player --> UC_Exit
+Player --> UC_Attack
+Player --> UC_Block
+Player --> UC_Pause
+Player --> UC_Restart
+Player --> UC_Result
+Player --> UC_Menu
+
+UC_Result .> UC_Restart : estende
+UC_Result .> UC_Menu : estende
+@enduml

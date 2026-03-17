@@ -12,7 +12,7 @@ namespace Classic_Snakes_Game_Tutorial___MOO_ICT
         public static int Width { get; set; }
         public static int Height { get; set; }
 
-        public static string directions;
+        public static string directions = "left";
 
         public Settings()
         {
