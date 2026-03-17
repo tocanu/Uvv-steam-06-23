@@ -1,8 +1,0 @@
-analise dos jogos antes de alteração
-jogo 06
-O jogo que é uma copia de punch out, o inimigo ficam em loop de um ao outro na frente do jogador em movimentos laterais. Toda vez que ele passa na frente do jogador, ele dá um soco no jogador, que reduz o ponto de vida do mesmo. O jogador pode revidar usando as setas do teclado para bater, quando o inimigo estiver em sua frente. Seta da esquerda bate pelo mesmo lado assim como a da direita bate também pelo mesmo lado. A seta para baixo parece ser um bloqueio de golpes, mas não ficou claro em todas as vezes que eu testei o jogo sem nenhuma alteração. Após uma vitória ou uma derrota, surge um pop up dizendo o resultado do jogo e um botão escrito "ok" apertando nele resulta em reinicio imediato do jogo, passando outra vez por uma tela sem menu inicial. fullscreen quebrado.
-
-
-jogo 23
-
-jogo da cobrinha adaptado para c#. As setas do teclado funcionam para direcionado a cobra, e o jogador deve buscar com esses controles comer para aumentar o tamanho da cobra. Diferente do jogo 6, esse jogo tem um menu de inicio, deixando o jogador escolher quando jogar após iniciar o jogo, não somente deixando o jogo iniciar assim que o app abre. O jogo tem uma velocidade extrema, difícil de controlar. fullscreen quebrado.
