@@ -1,4 +1,4 @@
-<Solution>
-  <Project Path="Jogo06/Jogo06.csproj" />
-  <Project Path="Jogo23/Jogo23.csproj" />
+﻿<Solution>
+  <Project Path="Simple-Punch-Out-Game-MOO-ICT-master/Simple Punch Out Game MOO ICT/Simple Punch Out Game MOO ICT.csproj" />
+  <Project Path="Windows-Form-Snakes-Game-Tutorial-with-c-sharp-main/Classic Snakes Game Tutorial - MOO ICT/Classic Snakes Game Tutorial - MOO ICT.csproj" />
 </Solution>

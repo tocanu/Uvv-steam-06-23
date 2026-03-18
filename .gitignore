@@ -17,6 +17,10 @@ obj/
 ## NuGet
 packages/
 
+## PlantUML
+*.puml
+plantuml.jar
+
 ## OS
 Thumbs.db
 Desktop.ini

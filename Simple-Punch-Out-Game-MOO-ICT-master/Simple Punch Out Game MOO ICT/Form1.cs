@@ -17,10 +17,14 @@ namespace Simple_Punch_Out_Game_MOO_ICT
         private bool isPaused;
         private bool isGameOver;
 
-        private int moveTickCounter;
         private float currentScale = 1f;
         private int enemyMinX;
         private int enemyMaxX;
+        private int enemyTargetX;
+        private int enemyModeTicks;
+        private EnemyMoveMode enemyMoveMode = EnemyMoveMode.Patrol;
+        private int enemyDodgeCooldown;
+        private int enemyDodgeBlockTicks;
 
         private const int BaseEnemySpeed = 5;
         private static readonly Size BaseClientSize = new Size(734, 561);
@@ -39,6 +43,13 @@ namespace Simple_Punch_Out_Game_MOO_ICT
         {
             Win,
             Lose
+        }
+
+        private enum EnemyMoveMode
+        {
+            Patrol,
+            Pause,
+            Dash
         }
 
         public Form1()
@@ -137,6 +148,8 @@ namespace Simple_Punch_Out_Game_MOO_ICT
             int speedDirection = enemySpeed == 0 ? 1 : Math.Sign(enemySpeed);
             enemySpeed = speedDirection * Math.Max(1, (int)(BaseEnemySpeed * scale));
 
+            EnsureEnemyTargetInBounds();
+
             UpdateScoreLabelPosition(offsetX, offsetY);
             CenterOverlay();
         }
@@ -219,31 +232,7 @@ namespace Simple_Punch_Out_Game_MOO_ICT
 
             UpdateHealthBars();
 
-            moveTickCounter++;
-            if (moveTickCounter % 50 == 0)
-            {
-                int magnitude = random.Next(3, 7);
-                int scaled = Math.Max(1, (int)(magnitude * currentScale));
-                int direction = enemySpeed == 0 ? 1 : Math.Sign(enemySpeed);
-                enemySpeed = direction * scaled;
-            }
-            if (moveTickCounter % 120 == 0 && random.NextDouble() < 0.3)
-            {
-                enemySpeed = -enemySpeed;
-            }
-
-            boxer.Left += enemySpeed;
-
-            if (boxer.Left > enemyMaxX)
-            {
-                boxer.Left = enemyMaxX;
-                enemySpeed = -Math.Abs(enemySpeed);
-            }
-            if (boxer.Left < enemyMinX)
-            {
-                boxer.Left = enemyMinX;
-                enemySpeed = Math.Abs(enemySpeed);
-            }
+            UpdateEnemyMovement();
 
             if (enemyHealth <= 0)
             {
@@ -279,7 +268,12 @@ namespace Simple_Punch_Out_Game_MOO_ICT
                 player.Image = Properties.Resources.boxer_left_punch;
                 playerBlock = false;
 
-                if (player.Bounds.IntersectsWith(boxer.Bounds) && enemyBlock == false)
+                if (TryEnemyDodge())
+                {
+                    return;
+                }
+
+                if (player.Bounds.IntersectsWith(boxer.Bounds) && IsEnemyBlocking() == false)
                 {
                     DamageEnemy(5);
                 }
@@ -289,7 +283,12 @@ namespace Simple_Punch_Out_Game_MOO_ICT
                 player.Image = Properties.Resources.boxer_right_punch;
                 playerBlock = false;
 
-                if (player.Bounds.IntersectsWith(boxer.Bounds) && enemyBlock == false)
+                if (TryEnemyDodge())
+                {
+                    return;
+                }
+
+                if (player.Bounds.IntersectsWith(boxer.Bounds) && IsEnemyBlocking() == false)
                 {
                     DamageEnemy(5);
                 }
@@ -396,15 +395,126 @@ namespace Simple_Punch_Out_Game_MOO_ICT
             enemyHealth = 100;
             playerBlock = false;
             enemyBlock = false;
+            enemyDodgeBlockTicks = 0;
+            enemyDodgeCooldown = 0;
 
             player.Image = Properties.Resources.boxer_stand;
             boxer.Image = Properties.Resources.enemy_stand;
 
             ApplyLayout();
+            InitializeEnemyMovement();
             UpdateHealthBars();
 
             BoxerAttackTimer.Start();
             BoxerMoveTimer.Start();
+        }
+
+        private void InitializeEnemyMovement()
+        {
+            enemyMoveMode = EnemyMoveMode.Patrol;
+            enemyModeTicks = 0;
+            enemyTargetX = random.Next(enemyMinX, enemyMaxX + 1);
+        }
+
+        private void EnsureEnemyTargetInBounds()
+        {
+            if (enemyMinX >= enemyMaxX)
+            {
+                return;
+            }
+
+            if (enemyTargetX < enemyMinX || enemyTargetX > enemyMaxX)
+            {
+                enemyTargetX = random.Next(enemyMinX, enemyMaxX + 1);
+            }
+        }
+
+        private void UpdateEnemyMovement()
+        {
+            if (enemyMinX >= enemyMaxX)
+            {
+                return;
+            }
+
+            if (enemyDodgeCooldown > 0)
+            {
+                enemyDodgeCooldown--;
+            }
+            if (enemyDodgeBlockTicks > 0)
+            {
+                enemyDodgeBlockTicks--;
+            }
+
+            if (enemyMoveMode == EnemyMoveMode.Pause)
+            {
+                enemyModeTicks--;
+                if (enemyModeTicks <= 0)
+                {
+                    enemyMoveMode = EnemyMoveMode.Patrol;
+                    enemyTargetX = random.Next(enemyMinX, enemyMaxX + 1);
+                }
+                return;
+            }
+
+            int baseSpeed = Math.Max(1, (int)(BaseEnemySpeed * currentScale));
+            int dashSpeed = baseSpeed + Math.Max(2, (int)(3 * currentScale));
+            int speed = enemyMoveMode == EnemyMoveMode.Dash ? dashSpeed : baseSpeed;
+
+            if (enemyMoveMode == EnemyMoveMode.Dash)
+            {
+                enemyModeTicks--;
+                if (enemyModeTicks <= 0)
+                {
+                    enemyMoveMode = EnemyMoveMode.Patrol;
+                    enemyTargetX = random.Next(enemyMinX, enemyMaxX + 1);
+                }
+            }
+
+            if (enemyMoveMode == EnemyMoveMode.Patrol && random.NextDouble() < 0.02)
+            {
+                enemyTargetX = random.Next(enemyMinX, enemyMaxX + 1);
+            }
+
+            int direction = Math.Sign(enemyTargetX - boxer.Left);
+            if (direction == 0)
+            {
+                direction = random.Next(0, 2) == 0 ? -1 : 1;
+            }
+
+            enemySpeed = direction * speed;
+            boxer.Left += enemySpeed;
+
+            if (boxer.Left >= enemyMaxX)
+            {
+                boxer.Left = enemyMaxX;
+                enemyTargetX = random.Next(enemyMinX, enemyMaxX + 1);
+            }
+            else if (boxer.Left <= enemyMinX)
+            {
+                boxer.Left = enemyMinX;
+                enemyTargetX = random.Next(enemyMinX, enemyMaxX + 1);
+            }
+
+            if (Math.Abs(boxer.Left - enemyTargetX) <= speed)
+            {
+                double roll = random.NextDouble();
+                if (roll < 0.25)
+                {
+                    enemyMoveMode = EnemyMoveMode.Pause;
+                    enemyModeTicks = random.Next(8, 18);
+                }
+                else if (roll < 0.45)
+                {
+                    enemyMoveMode = EnemyMoveMode.Dash;
+                    enemyModeTicks = random.Next(6, 14);
+                }
+                else
+                {
+                    enemyMoveMode = EnemyMoveMode.Patrol;
+                }
+
+                enemyTargetX = random.Next(enemyMinX, enemyMaxX + 1);
+            }
         }
 
         private void UpdateHealthBars()
@@ -424,6 +534,36 @@ namespace Simple_Punch_Out_Game_MOO_ICT
         private void DamageEnemy(int amount)
         {
             enemyHealth = Math.Max(0, enemyHealth - amount);
+        }
+
+        private bool IsEnemyBlocking()
+        {
+            return enemyBlock || enemyDodgeBlockTicks > 0;
+        }
+
+        private bool TryEnemyDodge()
+        {
+            if (enemyDodgeCooldown > 0 || enemyMoveMode == EnemyMoveMode.Pause)
+            {
+                return false;
+            }
+
+            double chance = enemyMoveMode == EnemyMoveMode.Dash ? 0.7 : 0.5;
+            if (random.NextDouble() >= chance)
+            {
+                return false;
+            }
+
+            enemyDodgeCooldown = random.Next(18, 30);
+            enemyDodgeBlockTicks = random.Next(8, 16);
+            enemyMoveMode = EnemyMoveMode.Dash;
+            enemyModeTicks = random.Next(8, 14);
+
+            int playerX = player.Left;
+            int mid = (enemyMinX + enemyMaxX) / 2;
+            enemyTargetX = playerX < mid ? enemyMaxX : enemyMinX;
+
+            return true;
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)

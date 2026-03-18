@@ -55,15 +55,16 @@ Diagrama de classes
 - Data: 17/03/2026 | Implementar melhorias do Jogo 23.
 - Data: 17/03/2026 | Produzir diagramas UML.
 - Data: 17/03/2026 | Revisar documentação final.
+Evidência do planejamento (Jira): `https://arthurfranca.atlassian.net/jira/software/projects/KAN/boards/1`
 
 ## Como executar
 
 Jogo 06 (Punch-Out)
 ```powershell
-dotnet run --project "d:\Projetos\Uvv-steam-06-23\Simple-Punch-Out-Game-MOO-ICT-master\Simple Punch Out Game MOO ICT\Simple Punch Out Game MOO ICT.csproj"
+dotnet run --project ".\Simple-Punch-Out-Game-MOO-ICT-master\Simple Punch Out Game MOO ICT\Simple Punch Out Game MOO ICT.csproj"
 ```
 
 Jogo 23 (Snake)
 ```powershell
-dotnet run --project "d:\Projetos\Uvv-steam-06-23\Windows-Form-Snakes-Game-Tutorial-with-c-sharp-main\Classic Snakes Game Tutorial - MOO ICT\Classic Snakes Game Tutorial - MOO ICT.csproj"
+dotnet run --project ".\Windows-Form-Snakes-Game-Tutorial-with-c-sharp-main\Classic Snakes Game Tutorial - MOO ICT\Classic Snakes Game Tutorial - MOO ICT.csproj"
 ```
